@@ -6,6 +6,8 @@ import bodyParser from 'body-parser';
 import logger from 'morgan';
 import mongoose from 'mongoose';
 import { getSecret } from './secrets';
+
+// Data access models
 import Food from './models/Food';
 import Shop from './models/Shop';
 
@@ -37,6 +39,7 @@ router.get('/', (req, res) => {
 
 router.get('/foods', (req, res) => {
     console.log(req.query.location + "location")
+    
     Food.find({"author" : "53"}, (err, foods) => {
       if (err) return res.json({ success: false, error: err });
       return res.json({ success: true, data: foods });

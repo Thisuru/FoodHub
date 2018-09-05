@@ -1,7 +1,5 @@
 // FoodApp.js
 import React, { Component } from 'react';
-import FoodList from './FoodList';
-import DATA from './data';
 import Select from 'react-select'
 import {ProductCard} from 'react-ui-cards';
 
@@ -12,35 +10,33 @@ class FoodApp extends Component {
     this.state = {
       data: [],
       error: null,
-      author: '',
-      text: '',
       selectedShop: null,
 
-      options : [
-        { value: 'chocolate', label: 'Chocolate' },
-        { value: 'strawberry', label: 'Strawberry' },
-        { value: 'vanilla', label: 'Vanilla' }
-      ]
+      options : []
     };
 
-    this.pollInterval = null;
     this.searchBarStyle = {
-      "width" : "50%"
+      "margin": "auto",
+      "width": "50%",
+      "padding": "10px",
+      "margin-top": "30px"
+    }
+
+    this.foodResultStyle = {
+      "margin": "auto",
+      "width": "84%",
+      "padding": "10px",
+      "display": "flex",
+      "background-color": "#efefeff2"
     }
 
 
 
   }
 
-  
 
   componentDidMount() {
     this.loadShops();
-  }
-
-  componentWillUnmount() {
-    if (this.pollInterval) clearInterval(this.pollInterval);
-    this.pollInterval = null;
   }
 
 
@@ -67,8 +63,6 @@ class FoodApp extends Component {
 
   handleChange = (selectedShp) => {
     this.setState({ selectedShop : selectedShp.value });
-    console.log(`Option selected:`, selectedShp);
-    this.loadShops();
   }
 
 
@@ -79,9 +73,7 @@ class FoodApp extends Component {
       shopElement = this.state.selectedShop.items.map(i=>{
       return <ProductCard key={i.item_name}
       photos={[
-        'https://i.imgur.com/t7DTziH.jpg',
-        'https://i.imgur.com/kA5lx6t.jpg',
-        'https://i.imgur.com/cUsl6Gs.jpg'
+        i.image_url
       ]}
       price={i.price}
       productName={i.item_name}
@@ -90,19 +82,21 @@ class FoodApp extends Component {
       url={"image_url : " + i.image_url}
     />  })
      }else {
-      shopElement = <div>No result</div>
+      shopElement = <div style={{"margin": "auto", "fontStyle" : "italic" , "color": "#868080"}}>No result</div>
      }  
     return (
       <div className="container">
-      <h2>FoodList:</h2>
+      <div style={{width: '100%', height : '250px', maxWidth:"100%", maxHeight:"100%", backgroundImage: `url(https://previews.123rf.com/images/lukpedclub/lukpedclub1706/lukpedclub170600186/81161826-thai-food-and-fresh-ingredients-on-wooden-background-flat-design-vector-for-banner-website-cover-or-.jpg)`}}></div>
+        
         <div style={this.searchBarStyle}>
           <Select
            value={selectedShop}
            onChange={this.handleChange}
            options={this.state.options}
+           placeholder={"Search for resturants"}
           />
         </div>
-        <div >
+        <div style={this.foodResultStyle}>
             {shopElement}        
         </div>
         {this.state.error && <p>{this.state.error}</p>}
