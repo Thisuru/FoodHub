@@ -1,13 +1,21 @@
-// FoodApp.js
+// FoodApp.js  //CommentBox.js
 import React, { Component } from 'react';
 import Select from 'react-select'
 import {ProductCard} from 'react-ui-cards';
+import { Carousel } from 'react-bootstrap';
+import './CardsCustom.css';
+
+
 
 
 class FoodApp extends Component {
   constructor() {
     super();
     this.state = {
+
+      index: 0,
+      direction: null,
+
       data: [],
       error: null,
       selectedShop: null,
@@ -15,11 +23,17 @@ class FoodApp extends Component {
       options : []
     };
 
-    this.searchBarStyle = {
+    this.searchOneBarStyle = {
+      "margin": "auto",
+      "width": "15%",
+      "padding": "10px",
+      "marginTop": "30px"
+    }
+    this.searchTwoBarStyle = {
       "margin": "auto",
       "width": "50%",
       "padding": "10px",
-      "margin-top": "30px"
+      "marginTop": "30px"
     }
 
     this.foodResultStyle = {
@@ -27,7 +41,7 @@ class FoodApp extends Component {
       "width": "84%",
       "padding": "10px",
       "display": "flex",
-      "background-color": "#efefeff2"
+      "backgroundColor": "#efefeff2"
     }
 
 
@@ -65,37 +79,96 @@ class FoodApp extends Component {
     this.setState({ selectedShop : selectedShp.value });
   }
 
+  handleSelect = (selectedIndex, e)=> {
+    this.setState({
+      index: selectedIndex,
+      direction: e.direction
+    });
+  }
+
 
   render() {
     const { selectedShop } = this.state;
+    const { index, direction } = this.state;
+
      let shopElement;
      if(this.state.selectedShop){
       shopElement = this.state.selectedShop.items.map(i=>{
       return <ProductCard key={i.item_name}
       photos={[
-        i.image_url
+        i.image_url 
       ]}
       price={i.price}
       productName={i.item_name}
       description={"available_quantity : " + i.available_quantity}
-      rating={5}
+      rating={"shop_id" + i.shop_id}
       url={"image_url : " + i.image_url}
     />  })
      }else {
       shopElement = <div style={{"margin": "auto", "fontStyle" : "italic" , "color": "#868080"}}>No result</div>
      }  
     return (
-      <div className="container">
-      <div style={{width: '100%', height : '250px', maxWidth:"100%", maxHeight:"100%", backgroundImage: `url(https://previews.123rf.com/images/lukpedclub/lukpedclub1706/lukpedclub170600186/81161826-thai-food-and-fresh-ingredients-on-wooden-background-flat-design-vector-for-banner-website-cover-or-.jpg)`}}></div>
+      <div>
+       
+       <div>
+         
+       <Carousel
+        activeIndex={index}
+        direction={direction}
+        onSelect={this.handleSelect}
+      >
+        <Carousel.Item>
+          <img width={2000} height={250} alt="900x500" src="https://b.zmtcdn.com/images/foodshots/cover/pizza3.jpg" />
+          <Carousel.Caption>
+            <h3>First slide label</h3>
+            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <img width={2000} height={250} alt="900x500" src="http://www.twitrcovers.com/wp-content/uploads/2013/10/Food-Cups-l.jpg" />
+          <Carousel.Caption>
+            <h3>Second slide label</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          </Carousel.Caption>
+        </Carousel.Item>
+        <Carousel.Item>
+          <img width={2000} height={250} alt="900x500" src="https://b.zmtcdn.com/images/foodshots/cover/pizza3.jpg" />
+          <Carousel.Caption>
+            <h3>Third slide label</h3>
+            <p>
+              Praesent commodo cursus magna, vel scelerisque nisl consectetur.
+            </p>
+          </Carousel.Caption>
+        </Carousel.Item>
+      </Carousel>
+
         
-        <div style={this.searchBarStyle}>
-          <Select
+        </div>
+
+
+
+<div style={{"marginTop": "20px"}} class="container">
+  <div class="row">
+    <div class="col-sm-4">
+    <Select
            value={selectedShop}
            onChange={this.handleChange}
            options={this.state.options}
            placeholder={"Search for resturants"}
           />
-        </div>
+    </div>
+    <div class="col-sm-8">
+    <Select
+           value={selectedShop}
+           onChange={this.handleChange}
+           options={this.state.options}
+           placeholder={"Search for resturants"}
+          />
+    </div>
+
+  </div>
+</div>
+
         <div style={this.foodResultStyle}>
             {shopElement}        
         </div>
