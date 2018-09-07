@@ -18,9 +18,12 @@ class FoodApp extends Component {
 
       data: [],
       error: null,
+      
       selectedShop: null,
+      selectedLocation: null,
 
-      options : []
+      options : [],
+      locationOptions : []
     };
 
     this.searchOneBarStyle = {
@@ -48,9 +51,9 @@ class FoodApp extends Component {
 
   }
 
-
   componentDidMount() {
     this.loadShops();
+    // this.loadLocations();
   }
 
 
@@ -58,6 +61,13 @@ class FoodApp extends Component {
     // fetch returns a promise. If you are not familiar with promises, see
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
     fetch('/api/foods/')
+      .then(data => data.json())
+      .then((res) => {
+        if (!res.success) this.setState({ error: res.error });
+        else this.setState({ data: res.data });
+      });
+
+      fetch('/api/shops/')
       .then(data => data.json())
       .then((res) => {
         if (!res.success) this.setState({ error: res.error });
@@ -71,11 +81,34 @@ class FoodApp extends Component {
       .then(data => data.json())
       .then((res) => {
         if (!res.success) this.setState({ error: res.error });
-        else this.setState({ options: res.data.map(shop=>({ label: shop.shop_name, value: shop })) })
+        else {
+           this.setState({ options: res.data.map(shop=>({ label: shop.shop_name, value: shop })) })
+           this.setState({ locationOptions: res.data.map(shop=>({ label: shop.address, value: shop })) }) 
+          }
       });
   }
 
-  handleChange = (selectedShp) => {
+  // loadLocations = () => {
+
+  //   fetch('/api/shops')
+  //     .then(data => data.json())
+  //     .then((res) => {
+  //       if (!res.success) this.setState({ error: res.error });
+  //       else this.setState({ locationOptions: res.data.map(shop=>({ label: shop.address, value: shop })) })
+  //     });
+  // }
+
+
+  // value={selectedLocation}
+  // onChange={this.handleChange}
+  // options={this.state.options}
+  // placeholder={"Search for Location"}
+
+  handleChangeLocation = (selectedLoca) => {
+    this.setState({ selectedLocation : selectedLoca.value });
+  }
+
+  handleChangeShop = (selectedShp) => {
     this.setState({ selectedShop : selectedShp.value });
   }
 
@@ -89,6 +122,7 @@ class FoodApp extends Component {
 
   render() {
     const { selectedShop } = this.state;
+    const { selectedLocation } = this.state;
     const { index, direction } = this.state;
 
      let shopElement;
@@ -151,16 +185,16 @@ class FoodApp extends Component {
   <div class="row">
     <div class="col-sm-4">
     <Select
-           value={selectedShop}
-           onChange={this.handleChange}
-           options={this.state.options}
-           placeholder={"Search for resturants"}
+           value={selectedLocation}
+           onChange={this.handleChangeLocation}
+           options={this.state.locationOptions}
+           placeholder={"Search for Location"}
           />
     </div>
     <div class="col-sm-8">
     <Select
            value={selectedShop}
-           onChange={this.handleChange}
+           onChange={this.handleChangeShop}
            options={this.state.options}
            placeholder={"Search for resturants"}
           />
