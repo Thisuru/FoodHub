@@ -47,12 +47,30 @@ router.get('/foods', (req, res) => {
   });
   
 router.get('/shops', (req, res) => {
-    Shop.find({}, (err, shops) => {
+    Shop.aggregate([
+      {$group: {
+          _id: "$address",
+          shops: {$push: "$$ROOT"}
+      }}
+    ], (err, shops) => {
         console.log(shops);
       if (err) return res.json({ success: false, error: err });
       return res.json({ success: true, data: shops });
     });
   });
+
+
+
+  router.post('/thisuru', (req, res) => {
+    Shop.find({ address:req.body.mylocation }, (err, shops) => {
+        console.log(shops);
+      if (err) return res.json({ success: false, error: err });
+      return res.json({ success: true, data: shops });
+    });
+  });
+
+
+
 
 router.post('/foods', (req, res) => {
     const food = new Food();

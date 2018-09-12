@@ -15,15 +15,17 @@ class FoodApp extends Component {
 
       index: 0,
       direction: null,
-
-      data: [],
       error: null,
       
-      selectedShop: null,
+      
+      
+      locationOptions : [],
       selectedLocation: null,
+      selectedLocationAddress: null,
 
-      options : [],
-      locationOptions : []
+      shopOptions : [],
+      selectedShop: null
+
     };
 
     this.searchOneBarStyle = {
@@ -53,37 +55,17 @@ class FoodApp extends Component {
 
   componentDidMount() {
     this.loadShops();
-    // this.loadLocations();
-  }
-
-
-  loadFoodsFromServer = () => {
-    // fetch returns a promise. If you are not familiar with promises, see
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
-    fetch('/api/foods/')
-      .then(data => data.json())
-      .then((res) => {
-        if (!res.success) this.setState({ error: res.error });
-        else this.setState({ data: res.data });
-      });
-
-      fetch('/api/shops/')
-      .then(data => data.json())
-      .then((res) => {
-        if (!res.success) this.setState({ error: res.error });
-        else this.setState({ data: res.data });
-      });
   }
 
   loadShops = () => {
+    
 
     fetch('/api/shops')
       .then(data => data.json())
       .then((res) => {
         if (!res.success) this.setState({ error: res.error });
         else {
-           this.setState({ options: res.data.map(shop=>({ label: shop.shop_name, value: shop })) })
-           this.setState({ locationOptions: res.data.map(shop=>({ label: shop.address, value: shop })) }) 
+             this.setState({ locationOptions: res.data.map(locGroup=>({ label: locGroup._id, value: locGroup.shops })) }) 
           }
       });
   }
@@ -104,14 +86,29 @@ class FoodApp extends Component {
   // options={this.state.options}
   // placeholder={"Search for Location"}
 
+
+
   handleChangeLocation = (selectedLoca) => {
+
+    this.setState({ shopOptions : [] });
+    this.setState({ selectedShop : null });
+    
+
     this.setState({ selectedLocation : selectedLoca.value });
+ 
+    let shops = selectedLoca.value;  
+    console.log(shops)
+    this.setState({ shopOptions: shops.map(shop=>({ label: shop.shop_name, value: shop })) })
+    
+
   }
+
+
 
   handleChangeShop = (selectedShp) => {
     this.setState({ selectedShop : selectedShp.value });
   }
-
+//Carousel 
   handleSelect = (selectedIndex, e)=> {
     this.setState({
       index: selectedIndex,
@@ -129,16 +126,14 @@ class FoodApp extends Component {
      if(this.state.selectedShop){
       shopElement = this.state.selectedShop.items.map(i=>{
       return <ProductCard key={i.item_name}
-      photos={[
-        i.image_url 
-      ]}
+      photos={[i.image_url]}
       price={i.price}
       productName={i.item_name}
       description={"available_quantity : " + i.available_quantity}
       rating={"shop_id" + i.shop_id}
-      url={"image_url : " + i.image_url}
-    />  })
-     }else {
+      url={"image_url : " + i.image_url}/>  })
+     }
+     else {
       shopElement = <div style={{"margin": "auto", "fontStyle" : "italic" , "color": "#868080"}}>No result</div>
      }  
     return (
@@ -154,24 +149,22 @@ class FoodApp extends Component {
         <Carousel.Item>
           <img width={2000} height={250} alt="900x500" src="https://b.zmtcdn.com/images/foodshots/cover/pizza3.jpg" />
           <Carousel.Caption>
-            <h3>First slide label</h3>
-            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+            <h1 style={{fontStyle: 'italic', fontSize: '60px', margin:'300px'}}>Looking for Food</h1>
+            <p style={{fontStyle: 'italic', fontSize: '25px'}}>Find resturants.Order online.Get food delivered</p>
           </Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item>
           <img width={2000} height={250} alt="900x500" src="http://www.twitrcovers.com/wp-content/uploads/2013/10/Food-Cups-l.jpg" />
           <Carousel.Caption>
-            <h3>Second slide label</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              <h1 style={{fontStyle: 'italic', fontSize: '60px', margin:'300px'}}>Looking for Food</h1>
+              <p style={{fontStyle: 'italic', fontSize: '25px'}}>Find resturants.Order online.Get food delivered</p>
           </Carousel.Caption>
         </Carousel.Item>
         <Carousel.Item>
           <img width={2000} height={250} alt="900x500" src="https://b.zmtcdn.com/images/foodshots/cover/pizza3.jpg" />
           <Carousel.Caption>
-            <h3>Third slide label</h3>
-            <p>
-              Praesent commodo cursus magna, vel scelerisque nisl consectetur.
-            </p>
+            <h1 style={{fontStyle: 'italic', fontSize: '60px', margin:'300px'}}>Looking for Food</h1>
+            <p style={{fontStyle: 'italic', fontSize: '25px'}}>Find resturants.Order online.Get food delivered</p>
           </Carousel.Caption>
         </Carousel.Item>
       </Carousel>
@@ -195,7 +188,7 @@ class FoodApp extends Component {
     <Select
            value={selectedShop}
            onChange={this.handleChangeShop}
-           options={this.state.options}
+           options={this.state.shopOptions}
            placeholder={"Search for resturants"}
           />
     </div>
@@ -203,10 +196,11 @@ class FoodApp extends Component {
   </div>
 </div>
 
-        <div style={this.foodResultStyle}>
+      <div style={this.foodResultStyle}>
             {shopElement}        
         </div>
         {this.state.error && <p>{this.state.error}</p>}
+      
       </div>
     );
   }
