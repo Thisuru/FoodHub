@@ -1,0 +1,16 @@
+db.shops.group(
+   {
+     key: { shop_name: 1},
+     reduce: function ( curr, result ) { },
+      initial: { }
+   }
+)
+
+
+
+db.shops.aggregate([
+  {$group: {
+      _id: "$shop_name",
+      my_winner: {$push: "$$ROOT"}
+  }}
+])
