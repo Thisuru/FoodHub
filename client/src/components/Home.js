@@ -4,12 +4,14 @@ import Select from 'react-select'
 import {ProductCard} from 'react-ui-cards';
 import { Carousel } from 'react-bootstrap';
 import '../CardsCustom.css';
+import '../Footer.css';
+import { withRouter } from 'react-router-dom'
 
 
 
 
 class Home extends Component {
-  constructor() {
+  constructor() { 
     super();
     this.state = {
 
@@ -55,6 +57,7 @@ class Home extends Component {
 
   componentDidMount() {
     this.loadShops();
+    this.loadFoods();
   }
 
   loadShops = () => {
@@ -70,21 +73,61 @@ class Home extends Component {
       });
   }
 
+
+  
+
+
+  loadFoods = () => {
+
+      // fetch('/api/foods')
+      //   .then(data => data.json())
+      //   .then((res) => {
+      //     if (!res.success) this.setState({ error: res.error });
+      //     else console.log(res.data);
+      //   });
+      function buildUrl(url, parameters) {
+        let qs = "";
+        for (const key in parameters) {
+            if (parameters.hasOwnProperty(key)) {
+                const value = parameters[key];
+                qs +=
+                    encodeURIComponent(key) + "=" + encodeURIComponent(value) + "&";
+            }
+        }
+        if (qs.length > 0) {
+            qs = qs.substring(0, qs.length - 1);
+            url = url + "?" + qs;
+        }
+    
+        return url;
+    }
+
+    fetch(
+      buildUrl('/api/foods', {
+          key: "KFC"
+      }),
+      {
+          method: "GET"
+      }
+  )
+        .then(data => data.json())
+        .then((res) => {
+          if (!res.success) this.setState({ error: res.error });
+          else console.log(res.data)
+        });
+          
+    }
+  
+
   // loadLocations = () => {
 
   //   fetch('/api/shops')
-  //     .then(data => data.json())
-  //     .then((res) => {
-  //       if (!res.success) this.setState({ error: res.error });
-  //       else this.setState({ locationOptions: res.data.map(shop=>({ label: shop.address, value: shop })) })
-  //     });
+      // .then(data => data.json())
+      // .then((res) => {
+      //   if (!res.success) this.setState({ error: res.error });
+      //   else this.setState({ locationOptions: res.data.map(shop=>({ label: shop.address, value: shop })) })
+      // });
   // }
-
-
-  // value={selectedLocation}
-  // onChange={this.handleChange}
-  // options={this.state.options}
-  // placeholder={"Search for Location"}
 
 
 
@@ -106,12 +149,13 @@ class Home extends Component {
 
 
   handleChangeShop = (selectedShp) => {
-    console.log(selectedShp.value)
-    this.setState({ selectedShop : selectedShp.value });
+    console.log(selectedShp.value.items)
+    this.setState({ selectedShop : selectedShp.value});
+    this.props.history.push('/Shopprofile?shop_name=' + selectedShp.value.shop_name);
   }
 //Carousel 
   handleSelect = (selectedIndex, e)=> {
-    this.setState({
+    this.setState({ 
       index: selectedIndex,
       direction: e.direction
     });
@@ -124,26 +168,27 @@ class Home extends Component {
     const { index, direction } = this.state;
 
     let shopElement;
-    if(this.state.selectedShop)
-    {
+    if(this.state.selectedShop){
      shopElement = this.state.selectedShop.items.map(i=>{
      return 
-          <ProductCard key={i.item_name}
-            photos={[i.image_url]}
-            price={i.price}
-            productName={i.item_name}
-            description={"available_quantity : " + i.available_quantity}
-            rating={"shop_id" + i.shop_id}
-            url={"image_url : " + i.image_url}/>
-          })
-    }
+
+     <ProductCard key={i.item_name}
+     photos={[i.image_url]}
+     price={i.price}
+     productName={i.item_name}
+     description={"available_quantity : " + i.available_quantity}
+     rating={"shop_id" + i.shop_id}
+     url={"image_url : " + i.image_url}/>
+
+         })
+     }
      else
       {
            shopElement = <div style={{"margin": "auto", "fontStyle" : "italic" , "color": "#868080"}}>No result</div>
       }  
     return (
 
-      <div>
+<div>
         <div>
                 
               <Carousel
@@ -199,16 +244,36 @@ class Home extends Component {
 </div>
 
       
-      <div style={this.foodResultStyle}>
-            {shopElement}        
-        </div>
-        <div>
-        {this.state.error && <p>{this.state.error}</p>}
-        
-      </div>
-      </div>
+            <div style={this.foodResultStyle}>
+                  {shopElement}        
+            </div>
+            <div>
+            {this.state.error && <p>{this.state.error}</p>}
+           </div>
+
+
+      
+            <div>
+                        <section id="footer">
+                            <ul class="icons">
+                              <li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+                              <li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+                              <li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+                              <li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
+                              <li><a href="#" class="icon fa-github"><span class="label">GitHub</span></a></li>
+                            </ul>
+                    <div class="copyright">
+                      <ul class="menu">
+                        <li>&copy; Untitled. All rights reserved.</li><li>Food Hub: <a href="Shopprofile.js">Shop Profile</a></li>
+                      </ul>
+                    </div>
+                  </section>
+            </div>
+
+
+</div>
     );
   }
 }
 
-export default Home;
+export default withRouter(Home);

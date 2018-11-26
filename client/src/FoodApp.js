@@ -4,6 +4,8 @@ import {BrowserRouter, Route} from "react-router-dom";
 
 import Home from "./components/Home";
 import Shopprofile from "./components/Shopprofile";
+import StarRating from './components/StarRating';
+import Map1 from './components/Map1';
 
 
 class FoodApp extends Component {
@@ -13,8 +15,12 @@ class FoodApp extends Component {
 
           <BrowserRouter>
               <div>
+
+
               <Route path="/" component={Home} exact/>
-              <Route path="/shopprofile" component={Shopprofile} />
+              <Route path="/shopprofile" component={Shopprofile} exact strict/>
+              <Route path="/StarRating" component={StarRating} />
+              <Route path="/Map1" component={Map1} />
               </div>
           </BrowserRouter>
 

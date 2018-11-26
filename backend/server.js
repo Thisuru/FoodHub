@@ -37,14 +37,26 @@ router.get('/', (req, res) => {
   res.json({ message: 'Hello, World!' });
 });
 
-router.get('/foods', (req, res) => {
-    console.log(req.query.location + "location")
+// router.get('/foods', (req, res) => {
+//     console.log(req.query.location + "location")
     
-    Food.find({"author" : "53"}, (err, foods) => {
-      if (err) return res.json({ success: false, error: err });
-      return res.json({ success: true, data: foods });
-    });
+//     Food.find({"author" : "53"}, (err, foods) => {
+//       if (err) return res.json({ success: false, error: err });
+//       return res.json({ success: true, data: foods });
+//     });
+//   });
+
+router.get('/foods', (req, res) => {
+  console.log("req.query");
+  console.log(req.query.key);
+  Shop.find({"shop_name" : req.query.key}, (err, foods) => {
+    
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: foods });
   });
+});
+
+
   
 router.get('/shops', (req, res) => {
     Shop.aggregate([
@@ -57,7 +69,7 @@ router.get('/shops', (req, res) => {
       if (err) return res.json({ success: false, error: err });
       return res.json({ success: true, data: shops });
     });
-  });
+  }); 
 
 
 
@@ -99,4 +111,11 @@ router.post('/foods', (req, res) => {
 // Use our router configuration when we call /api
 app.use('/api', router);
 
-app.listen(API_PORT, () => console.log(`Listening on port ${API_PORT}`));
+app.listen(API_PORT, () => console.log(`Listening on port ${API_PORT}`));router.get('/foods', (req, res) => {
+  console.log(req.query.location + "location")
+  
+  Food.find({"author" : "53"}, (err, foods) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: foods });
+  });
+});

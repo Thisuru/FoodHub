@@ -5,3 +5,5 @@ client/package-lock.json
 client/yarn.lock
 client/yarn-error.log
 
+
+package-lock\.json
