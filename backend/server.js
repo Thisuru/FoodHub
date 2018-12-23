@@ -46,6 +46,8 @@ router.get('/', (req, res) => {
 //     });
 //   });
 
+
+//get shop_name from db
 router.get('/foods', (req, res) => {
   console.log("req.query");
   console.log(req.query.key);
@@ -57,7 +59,7 @@ router.get('/foods', (req, res) => {
 });
 
 
-  
+//get shops from db according to address  
 router.get('/shops', (req, res) => {
     Shop.aggregate([
       {$group: {
@@ -73,17 +75,64 @@ router.get('/shops', (req, res) => {
 
 
 
-  router.post('/thisuru', (req, res) => {
-    Shop.find({ address:req.body.mylocation }, (err, shops) => {
-        console.log(shops);
+  //Insert a shop in to the database
+  router.post('/ninjas', function(req,res) {
+    Shop.create(req.body).then(function(Shop){
+        res.send(Shop);
+      }); 
+  });
+
+  
+  //Insert an item in to the database
+  router.post('/fooditem/:id', function(req,res) {
+    Shop.findByIdAndUpdate(
+      {_id: req.params.id},
+      { $push: {"items": req.body}},
+      {  safe: true, upsert: true},
+        function(err, model) {
+          if(err){
+           console.log(err);
+           return res.send(err);
+          }{
+            console.log("req.body =>");
+            console.log(req.body);
+           return res.json(model);
+          }
+       }); 
+  });
+
+
+  //Delete a whole shop
+  router.delete('/ninjas/:id', function(req,res){
+    Shop.findByIdAndRemove({_id: req.params.id}).then(function(Shop){
+        res.send(Shop);
+    });
+  });
+
+
+ 
+
+  //Update a shop property
+  router.put('/ninjas/:id', function(req,res){
+    Shop.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(){
+      Shop.findOne({_id: req.params.id}).then(function(Shop){
+        res.send(Shop);
+      });
+    });
+  });
+
+
+//ratings not complete
+  router.post('/ratings', (req, res) => {
+    Shop.find({ rating:req.body.rating }, (err, shops) => {
+       
       if (err) return res.json({ success: false, error: err });
       return res.json({ success: true, data: shops });
     });
   });
 
 
-
-
+  //Not used yet
 router.post('/foods', (req, res) => {
     const food = new Food();
     // body parser lets us use the req.body

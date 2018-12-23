@@ -12,7 +12,8 @@ class Shopprofile extends Component {
 			items: [],
 			shop_id:  null,
 			shop_name:  null,
-			_id:  null
+			_id:  null,
+			rating: null,
 			
         };
       }
@@ -70,7 +71,8 @@ class Shopprofile extends Component {
 					image_url: res.data[0].image_url,
 					items: res.data[0].items,
 					shop_name:  res.data[0].shop_name,
-					_id:  res.data[0]._id
+					_id:  res.data[0]._id,
+					rating: res.data[0].rating,
 					
 				})
 			}
@@ -277,7 +279,7 @@ return (
 					</header>
 					<div className="row">{this.renderfoods()}</div>
 			<footer>
-						<a href="#contact" className="button large scrolly">Get in touch with us</a>
+						<a href="/Map1" className="button large scrolly">Search us on Maps</a>
 						<StarRating/>
 					</footer>
 				</div>

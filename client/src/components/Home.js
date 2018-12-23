@@ -3,16 +3,20 @@ import React, { Component } from 'react';
 import Select from 'react-select'
 import {ProductCard} from 'react-ui-cards';
 import { Carousel } from 'react-bootstrap';
-import '../CardsCustom.css';
-import '../Footer.css';
-import { withRouter } from 'react-router-dom'
+import '../css/CardsCustom.css';
+import '../css/Footer.css';
+import { withRouter } from 'react-router-dom';
+import AppNavbar from './AppNavbar';
 
-
+// const auth = new Auth();
 
 
 class Home extends Component {
+
+  
   constructor() { 
     super();
+    
     this.state = {
 
       index: 0,
@@ -56,8 +60,19 @@ class Home extends Component {
   }
 
   componentDidMount() {
+  
+
+
+    
+
+
     this.loadShops();
     this.loadFoods();
+  }
+
+  authenticateUser = () => {
+    // const auth = new Auth();
+    // auth.login();
   }
 
   loadShops = () => {
@@ -167,6 +182,7 @@ class Home extends Component {
     const { selectedLocation } = this.state;
     const { index, direction } = this.state;
 
+
     let shopElement;
     if(this.state.selectedShop){
      shopElement = this.state.selectedShop.items.map(i=>{
@@ -189,6 +205,9 @@ class Home extends Component {
     return (
 
 <div>
+<div >
+<AppNavbar auth={this.props.auth} />
+</div>
         <div>
                 
               <Carousel
@@ -196,21 +215,21 @@ class Home extends Component {
                 direction={direction}
                 onSelect={this.handleSelect} >
                 <Carousel.Item>
-                  <img width={2000} height={250} alt="900x500" src="https://b.zmtcdn.com/images/foodshots/cover/pizza3.jpg" />
+                  <img width={2000} height={100} alt="900x500" src="https://i.ibb.co/vBXk1N5/50597de0f1b1fda.jpg" />
                   <Carousel.Caption>
                     <h1 style={{fontStyle: 'italic', fontSize: '60px', margin:'300px'}}>Looking for Food</h1>
                     <p style={{fontStyle: 'italic', fontSize: '25px'}}>Find resturants.Order online.Get food delivered</p>
                   </Carousel.Caption>
                 </Carousel.Item>
                 <Carousel.Item>
-                  <img width={2000} height={250} alt="900x500" src="http://www.twitrcovers.com/wp-content/uploads/2013/10/Food-Cups-l.jpg" />
+                  <img width={2000} height={100} alt="900x500" src="https://i.ibb.co/vBXk1N5/50597de0f1b1fda.jpg" />
                   <Carousel.Caption>
                       <h1 style={{fontStyle: 'italic', fontSize: '60px', margin:'300px'}}>Looking for Food</h1>
                       <p style={{fontStyle: 'italic', fontSize: '25px'}}>Find resturants.Order online.Get food delivered</p>
                   </Carousel.Caption>
                 </Carousel.Item>
                 <Carousel.Item>
-                  <img width={2000} height={250} alt="900x500" src="https://b.zmtcdn.com/images/foodshots/cover/pizza3.jpg" />
+                  <img width={2000} height={100} alt="900x500" src="https://i.ibb.co/vBXk1N5/50597de0f1b1fda.jpg" />
                   <Carousel.Caption>
                     <h1 style={{fontStyle: 'italic', fontSize: '60px', margin:'300px'}}>Looking for Food</h1>
                     <p style={{fontStyle: 'italic', fontSize: '25px'}}>Find resturants.Order online.Get food delivered</p>
