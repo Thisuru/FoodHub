@@ -10,6 +10,7 @@ import { getSecret } from './secrets';
 // Data access models
 import Food from './models/Food';
 import Shop from './models/Shop';
+import Customer from './models/Customer';
 
 // and create our instances
 const app = express();
@@ -18,9 +19,7 @@ const router = express.Router();
 // set our port to either a predetermined port number if you have set it up, or 3001
 const API_PORT = process.env.PORT || 3001;
 
-mongoose.connect(getSecret('dbUri'), { 
-  uri_decode_auth: true 
-  });
+mongoose.connect(getSecret('dbUri'));
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
@@ -131,6 +130,21 @@ router.get('/shops', (req, res) => {
       if (err) return res.json({ success: false, error: err });
       return res.json({ success: true, data: shops });
     });
+  });
+
+//Customer Profile Database Access New
+  router.post('/customer', function(req,res) {
+    Customer.create(req.body).then(function(customer){
+       //re res.send(customer);
+        res.send({
+          custname : req.body.custname,
+          email : req.body.email,
+          address : req.body.address
+        })
+        console.log("Customer Bla Bla");
+        console.log(req.body);
+        console.log("Customer: " + req.body.address);
+      }); 
   });
 
 

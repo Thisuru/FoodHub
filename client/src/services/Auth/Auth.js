@@ -77,7 +77,7 @@ export default class Auth {
   
     if(authResult.state){
         if(authResult.state=="USER"){
-          history.replace('/shopprofile')
+          history.replace('/CustomerProfile')
         }else {
           history.replace('/StarRating')
         }

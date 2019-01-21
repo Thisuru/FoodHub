@@ -6,9 +6,12 @@ import Home from "./components/Home";
 import Shopprofile from "./components/Shopprofile";
 import StarRating from './components/StarRating';
 import Map1 from './components/Map1';
+import CustomerProfile from './components/CustomerProfile';
+
 import Auth from './services/Auth/Auth';
 import Callback from './callback/Callback';
 import Profile from './profiles/Profile';
+//import Customer from './components/Customer';
 
 
 const auth = new Auth();
@@ -36,6 +39,9 @@ class FoodApp extends Component {
               <Route path="/shopprofile" component={Shopprofile} exact strict/>
               <Route path="/StarRating" component={StarRating} />
               <Route path="/Map1" component={Map1} />
+              <Route path="/CustomerProfile" component={CustomerProfile} />
+
+              {/* <Route path="/Customer" component={Customer} /> */}
               <Route path="/callback" render={(props) => {
                         handleAuthentication(props);
                     return <Callback {...props} /> 
